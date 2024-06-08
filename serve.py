@@ -11,7 +11,6 @@ try:
     uvicorn.run(asgi_app,
                 host="0.0.0.0",
                 port=8080,
-                log_level="debug",
                 ws_max_size=writer.serve.MAX_WEBSOCKET_MESSAGE_SIZE)
 except Exception as e:
     logging.error(f"An error occurred: {e}")
