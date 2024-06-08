@@ -9,7 +9,7 @@ def _run_model(model,content):
     import instructor
     import logfire
     from pydantic import BaseModel, Field
-    from typing import Iterable, List, Dict
+    from typing import Iterable, List
 
     load_dotenv()
 
