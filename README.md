@@ -1,7 +1,7 @@
 # Social Post Generator
 
 ## Overview
-This code was designed with the help of the writer framework, is a modification around it to generate social media posts using the any model that can support OpenAI api type. 
+Using the writerai framework, to generate social media posts using the any model that can support OpenAI api type. 
 
 ## Setup
 
