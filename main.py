@@ -22,8 +22,6 @@ def _run_model(model,content):
     logfire.instrument_openai(client)
 
     class PostGeneration(BaseModel):
-        title: str = Field(..., description = "Title of the post")
-        uid: str = Field(..., description = "Unique id for the post")
         post: str = Field(..., description = "The content of the post, this should be only the content of the topic and emojis")
         tags: List[str] = Field(..., description = "Five main relevant hashtags given for the post and #")
 
@@ -59,7 +57,7 @@ def _run_model(model,content):
 
         8. **Extended interaction**: For complex topics or longer word counts, inform the user of the need for multiple responses to ensure consistency throughout the content.
 
-        9. **The post should not include hashtags.
+        # Remember, the post should not include any hashtag and the number of hashtag should be of 5.
         
         """},
     ], 
@@ -71,30 +69,31 @@ def handle_button_click(state):
     state["message"] = "% Loading up expert social media posts..."
     posts = []
     hashtags = []
-    titles = []
-    for post in _run_model("gpt-3.5-turbo", state["topic"]):
-        print(post)
-        titles.append(post.model_dump()["title"])
-        posts.append(post.model_dump()["post"])
-        hashtags.append(post.model_dump()["tags"])
-    state["posts"] = {title: post for title, post in zip(titles, posts)}
-    print(hashtags)
-    # Ensure hashtags is a list of strings
-     #state["tags"] = {tags: tags for tags in hashtags}
     
+    
+    # Assuming _run_model is a function that interacts with the AI model
+    for post in _run_model("gpt-4o", state["topic"]):
+        post_data = post.model_dump()
+        posts.append(post_data["post"])
+        hashtags.append(post_data["tags"])
+    
+    state["posts"] = {
+            post: { f"tag_{tagid}" : tag  for tagid, tag in enumerate(hashtag) }
+        for post, hashtag in zip(posts, hashtags)
+
+        } 
+    
+    state["visibility"] = True
     state["message"] = ""
-
-    print(titles)
-    print(state["tags"])
-
 
 wf.init_state({
     "my_app": {
         "title": "SOCIAL POST GENERATOR"
     },
-    "posts":"", 
+    "posts":{}, 
     "topic":"",
     "message":"",
+    "visibility":False
 })
 
 
